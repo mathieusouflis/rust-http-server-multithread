@@ -12,9 +12,9 @@ pub struct Headers {
 }
 
 #[derive(Debug)]
-pub enum HeaderType {
-    Vector(Vec<String>),
-    Object(serde_json::Value),
+pub enum HeaderType<'a> {
+    Vector(&'a Vec<String>),
+    Object(&'a serde_json::Value),
 }
 
 impl Headers {
@@ -107,22 +107,30 @@ impl Headers {
         serde_json::Value::Object(cookie_map)
     }
 
-    pub fn new(headers: HeaderType) -> Self {
+    pub fn new(headers: &HeaderType) -> Self {
         match headers {
-            HeaderType::Vector(values) => Self::from_vector(values),
+            HeaderType::Vector(values) => Self::from_vector(values.to_vec()),
             HeaderType::Object(value) => {
                 println!("Head is a JsonValue with value: {:?}", value);
                 let cookie = value.get("cookie").cloned().expect("Cookie is missing in header...");
+                let host = value.get("host").cloned().expect("Host is missing in header...").to_string();
+                let user_agent = value.get("user_agent").cloned().expect("User-Agent is missing in header...").to_string();
+                let accept = value.get("accept").cloned().expect("Accept is missing in header...").to_string();
+                let accept_language = value.get("accept_language").cloned().expect("Accept-Language is missing in header...").to_string();
+                let accept_encoding = value.get("accept_encoding").cloned().expect("Accept-Encoding is missing in header...").to_string();
+                let connection = value.get("connection").cloned().expect("Connection is missing in header...").to_string();
+                let content_type = value.get("content_type").map(|v| v.to_string());
+                let content_length = value.get("content_length").and_then(|v| v.as_str()?.parse().ok());
                 Headers {
-                  cookies: cookie,
-                    host: String::new(),
-                    user_agent: String::new(),
-                    accept: String::new(),
-                    accept_language: String::new(),
-                    accept_encoding: String::new(),
-                    connection: String::new(),
-                    content_type: None,
-                    content_length: None,
+                    cookies: cookie,
+                    host,
+                    user_agent,
+                    accept,
+                    accept_language,
+                    accept_encoding,
+                    connection,
+                    content_type,
+                    content_length,
                 }
             }
         }
