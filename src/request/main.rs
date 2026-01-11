@@ -50,8 +50,8 @@ impl Request {
         }
     }
 
-    pub fn new(mut stream: TcpStream) -> Request {
-        let parsed_data = Self::parse_stream(&mut stream);
+    pub fn new(stream: &mut TcpStream) -> Request {
+        let parsed_data = Self::parse_stream(stream);
         let method = Self::get_method(parsed_data[0].split_whitespace().next().unwrap().to_string());
         let path = parsed_data[0].split_whitespace().nth(1).unwrap().to_string();
         let headers = Headers::new(&HeaderType::Vector(&parsed_data));
