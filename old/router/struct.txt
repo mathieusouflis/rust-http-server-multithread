@@ -1,0 +1,52 @@
+http-server/
+├── Cargo.toml
+├── README.md
+├── examples/
+│   ├── hello_world.rs
+│   ├── middleware_example.rs
+│   ├── websocket_chat.rs
+│   └── tls_server.rs
+├── src/
+│   ├── lib.rs                 # Public API exports
+│   ├── server.rs              # Server struct (app.listen())
+│   ├── app.rs                 # App struct (app.get/post/etc)
+│   ├── http/
+│   │   ├── mod.rs
+│   │   ├── request.rs         # Request struct & parser
+│   │   ├── response.rs        # Response struct & writer
+│   │   ├── method.rs          # HTTP methods enum
+│   │   ├── status.rs          # Status codes
+│   │   ├── headers.rs         # Header management
+│   │   └── parser.rs          # HTTP/1.1 protocol parser
+│   ├── router/
+│   │   ├── mod.rs
+│   │   ├── route.rs           # Route struct
+│   │   ├── matcher.rs         # Path matching & params extraction
+│   │   └── tree.rs            # Radix tree for efficient routing
+│   ├── middleware/
+│   │   ├── mod.rs
+│   │   ├── chain.rs           # Middleware chain execution
+│   │   ├── logger.rs          # Built-in logging middleware
+│   │   ├── cors.rs            # CORS middleware
+│   │   ├── static_files.rs    # Static file serving
+│   │   └── body_parser.rs     # JSON/form body parsing
+│   ├── handler.rs             # Handler trait & types
+│   ├── context.rs             # Request context (combines req/res)
+│   ├── websocket/
+│   │   ├── mod.rs
+│   │   ├── handshake.rs       # WebSocket upgrade handshake
+│   │   ├── frame.rs           # WebSocket frame parsing
+│   │   └── connection.rs      # WebSocket connection management
+│   ├── tls/
+│   │   ├── mod.rs
+│   │   └── config.rs          # TLS configuration wrapper
+│   ├── error.rs               # Error types
+│   └── utils/
+│       ├── mod.rs
+│       ├── buffer.rs          # Buffer management
+│       └── async_stream.rs    # Stream utilities
+└── tests/
+    ├── integration_tests.rs
+    ├── routing_tests.rs
+    ├── middleware_tests.rs
+    └── http_parser_tests.rs
