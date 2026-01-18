@@ -1,14 +1,14 @@
-use crate::http::{header::Header, method::Method};
+use crate::http::{header::{Header, Headers}, method::Method};
 
 pub struct Request {
     method: Method,
     path: String,
-    headers: Vec<Header>,
+    headers: Headers,
     body: Option<Vec<u8>>,
 }
 
 impl Request {
-    pub fn new(method: Method, path: String, headers: Vec<Header>, body: Option<Vec<u8>>) -> Self {
+    pub fn new(method: Method, path: String, headers: Headers, body: Option<Vec<u8>>) -> Self {
         Request {
             method,
             path,

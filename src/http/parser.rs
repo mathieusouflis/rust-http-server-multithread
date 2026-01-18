@@ -1,4 +1,4 @@
-use crate::http::{header::Header, method::Method, request::Request};
+use crate::http::{header::{Header, Headers}, method::Method, request::Request};
 
 #[derive(Debug)]
 pub enum ParseError {
@@ -15,7 +15,7 @@ pub enum ParseError {
 pub struct Parser;
 
 impl Parser {
-  pub fn parse_headers(lines: &[&str]) -> Result<Vec<Header>, ParseError> {
+  pub fn parse_headers(lines: &[&str]) -> Result<Headers, ParseError> {
     let mut headers = Vec::new();
     for line in lines {
         if line.is_empty() {
