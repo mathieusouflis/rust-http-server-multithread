@@ -31,11 +31,8 @@ impl Parser {
     Ok(headers)
   }
 
-  pub fn parse_request(input: &str) -> Result<Request, ParseError> {
-      let mut lines = input.lines();
-      let request_line = lines.next().ok_or(ParseError::MissingRequestLine)?;
-
-      let mut parts = request_line.split_whitespace();
+  fn parse_request_line(input: &str) -> Result<(Method, String, String), ParseError> {
+      let mut parts = input.split_whitespace();
       let method = parts.next().ok_or(ParseError::MissingMethod)?;
       let path = parts.next().ok_or(ParseError::MissingPath)?;
       let version = parts.next().ok_or(ParseError::MissingVersion)?;
@@ -44,18 +41,29 @@ impl Parser {
           return Err(ParseError::UnsupportedVersion);
       }
 
+      Ok((
+          Method::from_str(method).map_err(|_| ParseError::InvalidMethod)?,
+          path.to_string(),
+          version.to_string(),
+      ))
+  }
+
+  fn parse_request(input: &str) -> Result<Request, ParseError> {
+      let mut lines = input.lines();
+      let request_line = lines.next().ok_or(ParseError::MissingRequestLine)?;
+
+      let (method, path, version) = Self::parse_request_line(request_line)?;
 
       let headers = match Self::parse_headers(&lines.collect::<Vec<&str>>()) {
           Ok(h) => h,
           Err(e) => return Err(e),
       };
-      let body = Vec::new();
 
       Ok(Request::new(
-          Method::from_str(method).map_err(|_| ParseError::InvalidMethod)?,
+          method,
           path.to_string(),
           headers,
-          body,
+          None
       ))
   }
 }
